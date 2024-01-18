@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./output.css" rel="stylesheet">
+</head>
+<body>
+        <div class="flex bg-white h-[44.8rem] justify-center ">
+          <div class="mt-[5rem]">
+                 <div class="w-[22rem] h-[10rem] border-4 rounded-xl hover:shadow-xl border-black bg-white hover:shadow-black transition-all duration-500 relative translate-y-[10rem]" id="mainBox" onclick="openTodo()">
+                    <div class="grid grid-rows-6" id="listBox">
+                      <div class="flex justify-center font-bold h-[4rem] text-4xl mt-4">TO DO LIST</div>
+
+                      <div class="flex justify-center mt-2" id="btnDiv">
+                        <input type="button" value="Create" class="border-4 border-white rounded-xl px-14  h-10 text-xl font-bold hover:border-black transition-all duration-500 active:border-white active:bg-black    active:text-white" onclick="startTodo()" id="btn">
+                      </div>
+
+                      <!-- <div class="flex justify-center text-black text-2xl font-bold underline ">I have to learn car</div>
+                      <div class="flex justify-center text-black text-2xl font-bold underline ">I have to learn car</div>
+                      <div class="flex justify-center text-black text-2xl font-bold underline ">I have to learn car</div>
+                      <div class="flex justify-center text-black text-2xl font-bold underline ">I have to learn car</div>
+                      <div class="flex justify-center text-black text-2xl font-bold underline ">I have to learn car</div> -->
+                    </div>
+                    <div class="hidden justify-end items-start " id="addList">
+                      <div class="flex justify-start items-start">
+                        <input type="text" class=" transition-all duration-300 w-0 border-4 border-black p-2 rounded-lg -translate-y-4 translate-x-8 flex justify-start text-black text-xl" id="listinput">
+                      </div>
+                      <div   class=" hidden  justify-center items-start -translate-y-5 -translate-x-2 text-4xl border-black font-bold bg-white text-black border-4 rounded-full px-3 pb-2  shadow-2xl  hover:shadow-lg hover:shadow-black  shadow-black" id="addbtn" onclick="listAdd()">+</div>
+                    </div>
+               </div> 
+            </div>
+        </div>
+</body>
+<script>
+  var mainBox = document.getElementById("mainBox");
+var btn = document.getElementById("btn");
+var btnDiv = document.getElementById("btnDiv");
+var addbtn = document.getElementById("addbtn");
+var listBox = document.getElementById("listBox");
+
+var addList = document.getElementById("addList");
+var listinput = document.getElementById("listinput");
+
+function openTodo() {}
+
+function startTodo() {
+  mainBox.classList.remove("h-[10rem]", "translate-y-[10rem]");
+  mainBox.classList.add("h-[33rem]");
+  loadSavedItems();
+
+  function btnVisible(addbtn, addList) {
+    addbtn.classList.remove("hidden");
+    addList.classList.remove("hidden");
+    addbtn.classList.add("flex");
+    addList.classList.add("flex");
+  }
+  setTimeout(function () {
+    btnVisible(addbtn, addList);
+  }, 350);
+
+  btnDiv.style.display = "none";
+}
+
+var count = 0;
+
+function listAdd() {
+  if (addbtn.innerHTML == "+") {
+    listinput.classList.remove("translate-x-8", "w-0");
+    listinput.classList.add("w-[17rem]");
+    addbtn.innerHTML = "% ";
+  } else {
+    addbtn.innerHTML = "+";
+    listinput.classList.add("translate-x-8", "w-0");
+    listinput.classList.remove("w-[17rem]");
+
+    var inputValue = listinput.value.trim();
+    if (inputValue !== "") {
+      createListItem(inputValue);
+      saveData();
+      listinput.value = "";
+    }
+  }
+}
+
+function createListItem(itemText) {
+  var list = document.createElement("div");
+  list.classList.add("flex", "justify-center", "text-black", "text-2xl", "font-bold", "underline", ".del");
+  count++;
+  saveData();
+  if (count <= 5) {
+    list.innerHTML = itemText;
+    listBox.appendChild(list);
+    // delete list
+    list.addEventListener("click", function () {
+      list.style.textDecoration = "line-through";
+      saveData();
+    });
+    list.addEventListener("dblclick", function () {
+      list.innerHTML = "";
+      list.remove();
+      count--;
+      saveData();
+    });
+  } else {
+    alert("Max list reached ");
+    // delete list
+    list.addEventListener("click", function () {
+      list.style.textDecoration = "line-through";
+      saveData();
+    });
+    list.addEventListener("dblclick", function () {
+      list.innerHTML = "";
+      list.remove();
+      count--;
+      saveData();
+    });
+  }
+}
+
+function saveData() {
+  var tasks = [];
+  var items = listBox.querySelectorAll(".del");
+  items.forEach(function (item) {
+    tasks.push(item.innerText);
+  });
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function loadSavedItems() {
+  var savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  savedTasks.forEach(function (task) {
+    createListItem(task);
+  });
+}
+
+loadSavedItems();
+
+
+</script>
+</html>
